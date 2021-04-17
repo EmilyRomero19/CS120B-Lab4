@@ -12,7 +12,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum SM1_STATES { SM1_SMStart, SM1_LED1, SM1_LED2, SM1_RELEASED1 } SM1_STATE;
+enum SM1_STATES { SM1_SMStart, SM1_LED1, SM1_RELEASED1, SM1_LED2, SM1_RELEASED2 } SM1_STATE;
 void Tick_LED() {
 	switch(SM1_STATE){
 
@@ -22,28 +22,37 @@ void Tick_LED() {
 
 	case SM1_LED1:
 	if( (PINA & 0x01) == 0x01){ //if PAO pressed
-	SM1_STATE = SM1_LED2;
+	SM1_STATE = SM1_RELEASED1;
 	}
 	else{
 	SM1_STATE = SM1_LED1;
 	}
 	break;
+	
+	case SM1_RELEASED1:
+	if( (PINA & 0x01) == 0x01){ //if PAO pressed
+	SM1_STATE = SM1_LED2;
+	}
+	else{
+	SM1_STATE = SM1_RELEASED1;
+	}
+	break;		
 					
 	case SM1_LED2:
 	if( (PINA & 0x01) == 0x01){
-	SM1_STATE = SM1_RELEASED1;
+	SM1_STATE = SM1_RELEASED2;
 	}
 	else{
 	SM1_STATE = SM1_LED2;
 	}
 	break;
 			
-	case SM1_RELEASED1:
+	case SM1_RELEASED2:
 	if( (PINA & 0x01) == 0x01){
 	SM1_STATE = SM1_LED1;
 	}
 	else{
-	SM1_STATE = SM1_RELEASED1;
+	SM1_STATE = SM1_RELEASED2;
 	}
 	break;		
 	
@@ -58,15 +67,20 @@ void Tick_LED() {
 	case SM1_LED1:
 	PORTB = 0x01;
 	break;
+	
+	case SM1_RELEASED1:
+	break;
 			
 	case SM1_LED2:
 	PORTB = 0x02;
 	break;
 			
-	case SM1_RELEASED1:
-	PORTB = 0x02;
+	case SM1_RELEASED2:
 	break;
-			
+	
+	default:
+	PORTB = 0x01;
+	break;
 	}
 }	
 
