@@ -15,19 +15,18 @@
 # that they are not ran in isolation but in the order shown and the state of the device is not reset or 
 # altered in between executions (unless preconditions are used).
 
+
+# Test sequence from waitA0: PA0, !PA0, PA0, !PA0, PA0 => PORTB: 0xF0
 tests = [ {'description': 'PINA: 0x01, 0x00, 0x02 => PORTB: 0x0F',
-    'steps': [{'inputs': [('PINA', 0x01)], 'iterations': 2},
+    'steps': [{'inputs': [('PINA', 0x00)], 'iterations': 2},
         {'inputs': [('PINA', 0x01)], 'iterations': 100},
+        {'inputs': [('PINA', 0x01)], 'iterations': 2},
         {'inputs': [('PINA', 0x00)], 'iterations': 2},
-        {'inputs': [('PINA', 0x02)], 'iterations': 2}],
-    'expected': [('PORTB',0x0F)],
+        {'inputs': [('PINA', 0x01)], 'iterations': 2}],
+       'expected': [('PORTB',0x01)],
     },
     ]
 watch = ['state','cntA0']
-
-
 # Optionally you can add a set of "watch" variables these need to be global or static and may need
 # to be scoped at the function level (for static variables) if there are naming conflicts. The 
 # variables listed here will display everytime you hit (and stop at) a breakpoint
-watch = ['<function>::<static-var>','PORTB']
-
