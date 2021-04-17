@@ -22,13 +22,13 @@ void Tick_LED() {
 	break;
 	
 	case SM1_INIT:
-	if( (PINA & 0x00) == 0x00){
+	if( (PINA & 0x01) == 0x01){
 		SM1_STATE = SM1_ADD;
 	}
-	else if ((PINA & 0x01) == 0x01){
+	else if ((PINA & 0x02) == 0x02){
 		SM1_STATE = SM1_MINUS;
 	}
-	else if ( ((PINA & 0x00) == 0x00) && ((PINA & 0x01) == 0x01)){
+	else if ((PINA & 0x03) == 0x03){
 		SM1_STATE = SM1_RESET;
 	}
 	break;
