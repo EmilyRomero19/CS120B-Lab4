@@ -31,7 +31,7 @@ void Tick_LED() {
 					
 	case SM1_LED2:
 	if( (PINA & 0x01) == 0x01){
-	SM1_STATE = SM1_LED1;
+	SM1_STATE = SM1_RELEASED1;
 	}
 	else{
 	SM1_STATE = SM1_LED2;
@@ -64,7 +64,7 @@ void Tick_LED() {
 	break;
 			
 	case SM1_RELEASED1:
-	PORTB = 0x01;
+	PORTB = 0x02;
 	break;
 			
 	}
