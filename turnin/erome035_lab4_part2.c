@@ -13,9 +13,77 @@
 #include "simAVRHeader.h"
 #endif
 
-
-
-
+enum SM1_STATES { SM1_SMStart, SM1_INIT, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
+void Tick_LED() {
+	switch(SM1_STATE){
+			
+	case SM1_SMStart:
+	SM1_STATE = SM1_INIT;
+	break;
+	
+	case SM1_INIT:
+	if( (PINA & 0x00) == 0x00){
+		SM1_STATE = SM1_ADD;
+	}
+	else if ((PINA & 0x01) == 0x01){
+		SM1_STATE = SM1_MINUS;
+	}
+	else if ( ((PINA & 0x00) == 0x00) && ((PINA & 0x01) == 0x01)){
+		SM1_STATE = SM1_RESET;
+	}
+	break;
+	
+	case SM1_ADD:
+	SM1_STATE = SM1_INIT;
+	break;
+			
+	case SM1_MINUS:
+	SM1_STATE = SM1_INIT;
+	break;
+	
+	case SM1_RESET:
+	SM1_STATE = SM1_INIT;
+	break;
+	
+	default:
+	SM1_STATE = SM1_INIT;
+	break;		
+	
+	}
+	
+	switch(SM1_STATE){
+			
+	case SM1_SMStart:
+	break;
+	
+	case SM1_INIT:
+	PORTC = 0x07;
+	break;
+			
+	case SM1_ADD:
+	if(PORTC < 0x09){
+		
+	PORTC = PORTC + 1;
+	break;
+	}
+			
+	case SM1_MINUS:		
+	if(PORTC > 0x00){
+		
+	PORTC = PORTC - 1;
+	break;	
+	}
+	
+	case SM1_RESET:
+	PORTC = 0x00;
+	break;
+			
+	default:
+	PORTC = 0x07;
+	break;
+			
+	}
+}
 
 int main(void) {
     /* Insert DDR and PORT initializations */
