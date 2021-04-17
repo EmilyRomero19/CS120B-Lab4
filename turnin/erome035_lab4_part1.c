@@ -64,7 +64,8 @@ void Tick_LED() {
 	PORTB = 0x02;
 	break;
 			
-	case SM1_RELEASED2:	
+	case SM1_RELEASED2:
+	PORTB = 0x02;
 	break;
 	
 	default:
