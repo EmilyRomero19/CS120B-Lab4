@@ -54,6 +54,7 @@ void Tick_LED() {
 	switch(SM1_STATE){
 			
 	case SM1_SMStart:
+	PORTC = 0x07;
 	break;
 	
 	case SM1_INIT:
