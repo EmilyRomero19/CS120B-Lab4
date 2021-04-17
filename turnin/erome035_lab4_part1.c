@@ -12,7 +12,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum SM1_STATES { SM1_SMStart, SM1_LED1, SM1_RELEASED1, SM1_LED2, SM1_RELEASED2 } SM1_STATE;
+enum SM1_STATES { SM1_SMStart, SM1_LED1, SM1_LED2, SM1_RELEASED2 } SM1_STATE;
 void Tick_LED() {
 	switch(SM1_STATE){
 
@@ -21,38 +21,29 @@ void Tick_LED() {
 	break;
 
 	case SM1_LED1:
-	if( (PINA & 0x01) == 0x01){ //if button is being pressed 
+	if( (PINA & 0x01) == 0x01){ //if button is pressed, turn on LED2
+	SM1_STATE = SM1_LED2;
+	}
+	else{
 	SM1_STATE = SM1_LED1;
 	}
-	else{
-	SM1_STATE = SM1_RELEASED2;
-	}
 	break;
-	
-	case SM1_RELEASED1:
-	if( (PINA & 0x01) == 0x01){ //if button is being pressed 
-	SM1_STATE = SM1_LED2;
-	}
-	else{
-	SM1_STATE = SM1_RELEASED1; 
-	}
-	break;		
 					
 	case SM1_LED2:
-	if( (PINA & 0x01) == 0x01){ // if the buttons is being pressed
+	if( (PINA & 0x01) == 0x01){ // if the buttons is being pressed stay here 
 	SM1_STATE = SM1_LED2;
 	}
 	else{
-	SM1_STATE = SM1_RELEASED2; // the button stoped being pressed
+	SM1_STATE = SM1_RELEASED2; // the button is released
 	}
 	break;
 			
 	case SM1_RELEASED2:
-	if( (PINA & 0x01) == 0x01){
+	if( (PINA & 0x01) == 0x01){ // the button is pressed
 	SM1_STATE = SM1_LED1;
 	}
 	else{
-	SM1_STATE = SM1_RELEASED2;
+	SM1_STATE = SM1_RELEASED2; 
 	}
 	break;		
 	
@@ -61,7 +52,6 @@ void Tick_LED() {
 	break;
 }
 	
-	
 	switch(SM1_STATE){
 	case SM1_SMStart:
 	PORTB = 0x01;
@@ -69,9 +59,6 @@ void Tick_LED() {
 
 	case SM1_LED1:
 	PORTB = 0x01;
-	break;
-	
-	case SM1_RELEASED1:	
 	break;
 			
 	case SM1_LED2:
