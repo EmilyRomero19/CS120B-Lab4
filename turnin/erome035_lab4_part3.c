@@ -82,10 +82,10 @@ void Tick_Door() {
 	
 	switch(SM1_STATE) {
 	case START:
-	PORTB = 0x00;
 	break;
 			
 	case INIT:
+	PORTB = 0x00;
 	break;
 			
 	case POUND_UNLOCK:
@@ -99,7 +99,7 @@ void Tick_Door() {
 	break;
 			
 	case LOCK:
-	PORTB = 0x00;
+	PORTB = 0x01;
 	break;
 
 	}
