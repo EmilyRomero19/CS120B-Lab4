@@ -69,7 +69,7 @@ void Tick_Door() {
 		if ((PINA & 0x87) == 0x80) {
                          SM1_STATE = LOCK;
                 }
-                if else ((PINA & 0x07) == 0x02) {
+                else if((PINA & 0x07) == 0x02) {
                          SM1_STATE = LOCK;
                 }
 		else{
