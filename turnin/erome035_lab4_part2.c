@@ -13,11 +13,6 @@
 #include "simAVRHeader.h"
 #endif
 
-#include <avr/io.h>
-#ifdef _SIMULATE_
-#include "simAVRHeader.h"
-#endif
-
 enum States {Start, Begin, Init, Reset, Plus, Minus, PlusOn, MinusOn} state;
 void Tick() {
 	switch(state) {
@@ -112,7 +107,7 @@ int main(void) {
     DDRA = 0x00; PORTA = 0xFF;
     DDRC = 0xFF; PORTC = 0x00;
     while (1) {
-	Tick();
+	void Tick();
     }
     return 1;
 }
