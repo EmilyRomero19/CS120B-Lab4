@@ -41,7 +41,13 @@ void Tick_Door() {
                 break;
 			
 		case Y_UNLOCK:
-		if ((PINA & 0x07) == 0x02) {
+			
+		if (((PINA & 0x07) == 0x02) && ((PORTB & 0x01) == 0x01)) {	
+			
+			 SM1_STATE = LOCK;
+		}
+			
+		else if ((PINA & 0x07) == 0x02) {
                       SM1_STATE = Y_RELEASE;
                 }
 	 	else if (PINA == 0x00) {
@@ -66,6 +72,9 @@ void Tick_Door() {
 		if ((PINA & 0x87) == 0x80) {
                          SM1_STATE = LOCK;
                 }
+                else if((PINA & 0x07) == 0x02) {
+                         SM1_STATE = LOCK;
+                }	
 		else{
 		 	SM1_STATE = INIT;
 		}
