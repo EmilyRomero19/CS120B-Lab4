@@ -13,7 +13,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum SM1_STATES { SM1_SMStart, SM1_INIT, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
+enum SM1_STATES { SM1_SMStart, SM1_INIT, SM1_ADD1, SM1_MINUS1, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
 void Tick_LED() {
 	switch(SM1_STATE){
 			
@@ -33,7 +33,7 @@ void Tick_LED() {
 	}
 	break;
 	
-	case SM1_ADD:
+	case SM1_ADD1:
 	if( (PINA & 0x01) == 0x01){
 		SM1_STATE = SM1_ADD;
 	}
@@ -41,8 +41,12 @@ void Tick_LED() {
 		SM1_STATE = SM1_INIT;
 	}
 	break;	
+			
+	case SM1_ADD:
+	SM1_STATE = SM1_ADD1;	
+	break;	
 	
-	case SM1_MINUS:
+	case SM1_MINUS1:
 	if ((PINA & 0x02) == 0x02){
 		SM1_STATE = SM1_MINUS;
 	}
@@ -50,7 +54,11 @@ void Tick_LED() {
 		SM1_STATE = SM1_INIT;
 	}
 	break;
-			
+		
+	case SM1_MINUS:	
+	SM1_STATE = SM1_MINUS;
+	break;
+	
 	case SM1_RESET:
 	if ((PINA & 0x02) == 0x02){
 		SM1_STATE = SM1_RESET;
@@ -75,6 +83,12 @@ void Tick_LED() {
 	case SM1_INIT:
 	PORTC = 0x07;
 	break;
+			
+	case SM1_ADD:
+	break;
+			
+	case SM1_MINUS:	
+	break;	
 			
 	case SM1_ADD:
 	if(PORTC < 0x09){
