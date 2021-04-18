@@ -71,7 +71,7 @@ void Tick_Reset() {
 		
 			
 		case SM1_MINUS1:
-		if (!tempVal && !tempVal2) {
+		if (!ButtonAdd && ButtonMinus) {
 			SM1_STATE = SM1_MINUS1;
             	}
             	else {
