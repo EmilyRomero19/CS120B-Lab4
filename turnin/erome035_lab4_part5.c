@@ -75,7 +75,7 @@ void Tick_Door() {
 		break;	
 			
 		
-		case Locked:
+		case LOCK:
 		if ((PINA & 0x87) == 0x80) {
                         SM1_STATE = LOCK;
                 }
