@@ -21,7 +21,7 @@ void Tick_Door() {
 			
 		case INIT:
 		if ((PINA & 0x07) == 0x04) {
-			SM1_STATE = POUND_UNLOCK;
+			SM1_STATE = LOCK;
 		}
 		else if ((PINA & 0x87) == 0x80) {
 			SM1_STATE = Y_UNLOCK;
@@ -43,7 +43,6 @@ void Tick_Door() {
 		case Y_UNLOCK:
 			
 		if (((PINA & 0x07) == 0x02) && ((PORTB & 0x01) == 0x01)) {	
-			
 			 SM1_STATE = LOCK;
 		}
 			
