@@ -90,14 +90,14 @@ void Tick_LED() {
 	case SM1_MINUS:	
 	break;	
 			
-	case SM1_ADD:
+	case SM1_ADD1:
 	if(PORTC < 0x09){
 		
 	PORTC = PORTC + 1;
 	break;
 	}
 			
-	case SM1_MINUS:		
+	case SM1_MINUS1:		
 	if(PORTC > 0x00){
 		
 	PORTC = PORTC - 1;
