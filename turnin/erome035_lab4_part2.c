@@ -13,101 +13,117 @@
 #include "simAVRHeader.h"
 #endif
 
-enum States {Start, Begin, Init, Reset, Plus, Minus, PlusOn, MinusOn} state;
-void Tick() {
-	switch(state) {
-		case Start:
-			state = Begin;
-			break;
-		case Begin:
-			state = Init;
-			break;
-		case Init:
-			if ((PINA & 0x03) == 0x03) {
-                                state = Reset;
-                        }
-			else if ((PINA & 0x01) == 0x01) {
-				state = PlusOn;
-			}
-			else if ((PINA & 0x02) == 0x02) {
-                                state = MinusOn;
-                        }
-			break;
-		case Reset:
-			if ((PINA & 0x03) == 0x03) {
-				state = Reset;
-			}
-			else {
-				state = Init;
-			}
-			break;
-		case Plus:
-			if ((PINA & 0x01) == 0x01) {
-                                state = Plus;
-                        }
-                        else {
-                                state = Init;
-                        }
-                        break;
-		case PlusOn:
-			state = Plus;
-			break;
+enum SM1_STATES { SM1_SMStart, SM1_INIT, SM1_ADD1, SM1_MINUS1, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
+void Tick_LED() {
+	switch(SM1_STATE){
 			
-		case Minus:
-                        if ((PINA & 0x02) == 0x02) {
-                                state = Minus;
-                        }
-                        else {
-                                state = Init;
-                        }
-                        break;
-		case MinusOn:
-			state = Minus;
-			break;
-			
-		default:
-			state = Start;
-			break;
+	case SM1_SMStart:
+	SM1_STATE = SM1_INIT;
+	break;
+	
+	case SM1_INIT:
+	if( (PINA & 0x01) == 0x01){
+		SM1_STATE = SM1_ADD;
 	}
-	switch(state) {
-		case Start:
-			PORTC = 0x07;
-			break;
-		case Begin:
-			PORTC = 0x07;
-			break;
-		case Init:
-			break;
-		case Plus:
-			break;
-		case Minus:
-			break;
-		case PlusOn:
-			if (PORTC < 0x09) {
-                        	PORTC = PORTC + 1;
-			}
-                        break;
-		case MinusOn:
-			if (PORTC > 0x00) { 
-                        	PORTC = PORTC - 1;
-			}
-                        break;
-		case Reset:
-			PORTC = 0x00;
-			break;
-		default:
-			PORTC = 0x07;
-			break;
+	else if ((PINA & 0x02) == 0x02){
+		SM1_STATE = SM1_MINUS;
+	}
+	else if ((PINA & 0x03) == 0x03){
+		SM1_STATE = SM1_RESET;
+	}
+	break;
+	
+	case SM1_ADD1:
+	if( (PINA & 0x01) == 0x01){
+		SM1_STATE = SM1_ADD;
+	}
+	else{
+		SM1_STATE = SM1_INIT;
+	}
+	break;	
+			
+	case SM1_ADD:
+	SM1_STATE = SM1_ADD1;	
+	break;	
+	
+	case SM1_MINUS1:
+	if ((PINA & 0x02) == 0x02){
+		SM1_STATE = SM1_MINUS;
+	}
+	else{
+		SM1_STATE = SM1_INIT;
+	}
+	break;
+		
+	case SM1_MINUS:	
+	SM1_STATE = SM1_MINUS;
+	break;
+	
+	case SM1_RESET:
+	if ((PINA & 0x02) == 0x02){
+		SM1_STATE = SM1_RESET;
+	}
+	else{
+		SM1_STATE = SM1_INIT;
+	}
+	break;		
+			
+	default:
+	SM1_STATE = SM1_INIT;
+	break;		
+	
+	}
+	
+	switch(SM1_STATE){
+			
+	case SM1_SMStart:
+	PORTC = 0x07;
+	break;
+	
+	case SM1_INIT:
+	PORTC = 0x07;
+	break;
+			
+	case SM1_ADD:
+	break;
+			
+	case SM1_MINUS:	
+	break;	
+			
+	case SM1_ADD1:
+	if(PORTC < 0x09){
+		
+	PORTC = PORTC + 1;
+	break;
+	}
+			
+	case SM1_MINUS1:		
+	if(PORTC > 0x00){
+		
+	PORTC = PORTC - 1;
+	break;	
+	}
+	
+	case SM1_RESET:
+	PORTC = 0x00;
+	break;
+			
+	default:
+	PORTC = 0x07;
+	break;
+			
 	}
 }
 
 int main(void) {
     /* Insert DDR and PORT initializations */
+
+	DDRA = 0x00; PORTA = 0xFF; //inputs
+	DDRB = 0xFF; PORTB = 0x00; //outputs
+	
     /* Insert your solution below */
-    DDRA = 0x00; PORTA = 0xFF;
-    DDRC = 0xFF; PORTC = 0x00;
     while (1) {
-	void Tick();
+	Tick_LED();
     }
     return 1;
 }
