@@ -24,7 +24,7 @@ void Tick_Door() {
 			SM1_STATE = POUND_UNLOCK;
 		}
 		else if ((PINA & 0x87) == 0x80) {
-			SM1_STATE = LOCK;
+			SM1_STATE = Y_UNLOCK;
 		}
 		else {
 			SM1_STATE = INIT;
