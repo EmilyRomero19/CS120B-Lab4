@@ -14,6 +14,7 @@
 
 enum SM1_STATES { SM1_SMStart, SM1_LED1, SM1_LED2, SM1_RELEASED2 } SM1_STATE;
 void Tick_LED() {
+	
 	switch(SM1_STATE){
 
 	case SM1_SMStart:
@@ -40,10 +41,10 @@ void Tick_LED() {
 			
 	case SM1_RELEASED2:
 	if( (PINA & 0x01) == 0x01){ // the button is pressed
-	SM1_STATE = SM1_LED1;
+	SM1_STATE = SM1_RELEASED2;
 	}
 	else{
-	SM1_STATE = SM1_RELEASED2; 
+	SM1_STATE = SM1_LED1; 
 	}
 	break;		
 	
