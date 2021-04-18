@@ -12,7 +12,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum SM1_STATES { SM1_SMStart, SM1_LED1, SM1_LED2, SM1_RELEASED2 } SM1_STATE;
+enum SM1_STATES { SM1_SMStart, SM1_LED1, SM1_RELEASED1, SM1_LED2, SM1_RELEASED2 } SM1_STATE;
 void Tick_LED() {
 	
 	switch(SM1_STATE){
@@ -23,12 +23,21 @@ void Tick_LED() {
 
 	case SM1_LED1:
 	if( (PINA & 0x01) == 0x01){ //if button is pressed, turn on LED2
+	SM1_STATE = SM1_LED1;
+	}
+	else{
+	SM1_STATE = SM1_RELEASED1;
+	}
+	break;
+			
+	case SM1_RELEASED1:
+	if( (PINA & 0x01) == 0x01){ // if the buttons is being pressed stay here 
 	SM1_STATE = SM1_LED2;
 	}
 	else{
-	SM1_STATE = SM1_LED1;
+	SM1_STATE = SM1_RELEASED1; // the button is released
 	}
-	break;
+	break;		
 					
 	case SM1_LED2:
 	if( (PINA & 0x01) == 0x01){ // if the buttons is being pressed stay here 
@@ -60,7 +69,10 @@ void Tick_LED() {
 	case SM1_LED1:
 	PORTB = 0x01;
 	break;
-			
+		
+	case SM1_RELEASED1:
+	break;
+				
 	case SM1_LED2:
 	PORTB = 0x02;
 	break;
