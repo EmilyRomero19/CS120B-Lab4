@@ -13,16 +13,12 @@
 #include "simAVRHeader.h"
 #endif
 
-enum SM1_STATES { SM1_SMStart, SM1_INIT1, SM1_INIT2, SM1_ADD1, SM1_MINUS1, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
+enum SM1_STATES { SM1_SMStart, SM1_INIT, SM1_ADD1, SM1_MINUS1, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
 void Tick_LED() {
 	switch(SM1_STATE){
 			
 	case SM1_SMStart:
-	SM1_STATE = SM1_INIT1;
-	break;
-	
-	case SM1_SMStart:
-	SM1_STATE = SM1_INIT1;
+	SM1_STATE = SM1_INIT;
 	break;
 	
 	case SM1_INIT:
@@ -84,11 +80,8 @@ void Tick_LED() {
 	PORTC = 0x07;
 	break;
 	
-	case SM1_INIT1:
+	case SM1_INIT:
 	PORTC = 0x07;
-	break;
-	
-	case SM1_INIT2:
 	break;
 			
 	case SM1_ADD:
