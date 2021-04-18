@@ -15,8 +15,8 @@
 
 enum SM1_STATES { SM1_SMStart, SM_INIT1, SM1_INIT2, SM1_ADD1, SM1_MINUS1, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
 void Tick_Reset() {	
-	unsigned char tempVal = PINA & 0x01; //tmpa
-	unsigned char tempVal2 = PINA & 0x02; //tmpb
+	unsigned char tempVal = PINA & 0x01; 
+	unsigned char tempVal2 = PINA & 0x02; 
 	switch(SM1_STATE) {
 		case SM1_SMStart:
 		SM1_STATE = SM_INIT1;
