@@ -16,13 +16,12 @@
 # altered in between executions (unless preconditions are used).
 
 
-# Test sequence from waitA0: PA0, !PA0, PA0, !PA0, PA0 => PORTB: 0xF0
-tests = [ {'description': 'PINA: 0x01, 0x00, 0x02 => PORTB: 0x0F',
+tests = [ {'description': 'PINA: 0x00 => PORTC: 0x07, PINA: 0x01 => PORTC: 0x08, PINA: 0x01 => PORTC: 0x08, PINA: 0x00 => PORTC: 0x08, PINA: 0x02 => PORTC: 0x07'
     'steps': [{'inputs': [('PINA', 0x00)], 'iterations': 2},
-        {'inputs': [('PINA', 0x01)], 'iterations': 100},
+        {'inputs': [('PINA', 0x01)], 'iterations': 2},
         {'inputs': [('PINA', 0x01)], 'iterations': 2},
         {'inputs': [('PINA', 0x00)], 'iterations': 2},
-        {'inputs': [('PINA', 0x01)], 'iterations': 2}],
+        {'inputs': [('PINA', 0x02)], 'iterations': 2}],
        'expected': [('PORTB',0x01)],
     },
     ]
