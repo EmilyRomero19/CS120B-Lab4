@@ -13,7 +13,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum SM1_STATES { SM1_SMStart, SM_INIT1, SM1_INIT2, SM1_ADD1, SM1_MINUS1, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
+enum SM1_STATES { SM1_SMStart, SM_INIT1, /*SM1_INIT2,*/ SM1_ADD1, SM1_MINUS1, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
 
 void Tick_Reset() {	
 	
@@ -26,11 +26,11 @@ void Tick_Reset() {
 		SM1_STATE = SM_INIT1;
 		break;
 			
-		case SM_INIT1:
+		/*case SM_INIT1:
 		SM1_STATE = SM1_INIT2;
-		break;
+		break;*/
 			
-		case SM1_INIT2:
+		case SM1_INIT1:
 		if (ButtonAdd && ButtonMinus) { // reset
                	 	SM1_STATE = SM1_RESET;
             	}
@@ -41,7 +41,7 @@ void Tick_Reset() {
                 	SM1_STATE = SM1_MINUS;
             	}
 		else if (!ButtonAdd && !ButtonMinus){ // stay in same state
-			SM1_STATE = SM1_INIT2; 
+			SM1_STATE = SM1_INIT1; 
 		}
 		break;
 			
@@ -51,7 +51,7 @@ void Tick_Reset() {
 			SM1_STATE = SM1_RESET;
 		}
 		else {
-			SM1_STATE = SM1_INIT2; // go back to initial
+			SM1_STATE = SM1_INIT1; // go back to initial
 		}
 		break;
 			
@@ -61,7 +61,7 @@ void Tick_Reset() {
                 	SM1_STATE = SM1_ADD1;
             	}
             	else {
-                	SM1_STATE = SM1_INIT2; // go back to initial
+                	SM1_STATE = SM1_INIT1; // go back to initial
             	}
             	break;
 			
@@ -75,7 +75,7 @@ void Tick_Reset() {
 			SM1_STATE = SM1_MINUS1;
             	}
             	else {
-                	SM1_STATE = SM1_INIT2;
+                	SM1_STATE = SM1_INIT1;
             	}
             	break;
 			
@@ -97,8 +97,8 @@ void Tick_Reset() {
 	PORTC = 0x07;
 	break;
 			
-	case SM1_INIT2:
-	break;
+	//case SM1_INIT2:
+	//break;
 			
 	case SM1_ADD1:
 	break;
