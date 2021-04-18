@@ -14,69 +14,68 @@
 
 enum SM1_STATES {START, INIT, POUND_UNLOCK, Y_UNLOCK, Y_RELEASE, LOCK} SM1_STATE;
 void Tick_Door() {
+	
+	unsigned char press1 = PINA & 0x01;
+	unsigned char press2 = PINA & 0x02;
+	unsigned char press3 = PINA & 0x04;
+	
 	switch(SM1_STATE) {
 		case START:
 		SM1_STATE = INIT;
 		break;
 			
 		case INIT:
-		if ((PINA & 0x07) == 0x04) {
-			SM1_STATE = LOCK;
+		if ((PINA & 0x80) == 0x80) {
+			SM1_STATE = INIT;
 		}
-		else if ((PINA & 0x87) == 0x80) {
-			SM1_STATE = Y_UNLOCK;
-		}
-		else {
+		else if (press1 && !press2 && !press3){
 			SM1_STATE = POUND_UNLOCK;
 		}
+		//else {
+			//SM1_STATE = POUND_UNLOCK;
+		//}
 		break;
 			
 		case POUND_UNLOCK:
-		if ((PINA & 0x07) == 0x04) {
+		if ((PINA & 0x04) == 0x04) {
                         SM1_STATE = POUND_UNLOCK;
-                }
-                else {
-                        SM1_STATE = Y_UNLOCK;
-                }
-                break;
-			
-		case Y_UNLOCK:
-			
-		if (((PINA & 0x07) == 0x02) && ((PORTB & 0x01) == 0x01)) {	
-			 SM1_STATE = LOCK;
-		}
-			
-		else if ((PINA & 0x07) == 0x02) {
-                      SM1_STATE = Y_RELEASE;
-                }
-	 	else if (PINA == 0x00) {
-		      SM1_STATE = Y_UNLOCK;
-		}
-                else {
-                      SM1_STATE = INIT;
-                }
-                break;
-			
-		case Y_RELEASE:
-		if ((PINA & 0x07) == 0x02) {
-                        SM1_STATE = Y_RELEASE;
                 }
                 else {
                         SM1_STATE = INIT;
                 }
                 break;
 			
+		case Y_UNLOCK:	
+		if ((PINA & 0x80) == 0x80) {	
+			 SM1_STATE = INIT;
+		}
+			
+		else if (PINA & 0x00) {
+                      SM1_STATE = Y_UNLOCK;
+                }
+                else {
+                      SM1_STATE = Y_RELEASE;
+                }
+                break;
+			
+		case Y_RELEASE:
+		if ((PINA & 0x02) == 0x02) {
+                       SM1_STATE = Y_RELEASE;
+                }
+              	else{
+			 SM1_STATE = INIT;
+		}
+                break;
+			
 			
 		case LOCK:
-		if ((PINA & 0x87) == 0x80) {
+		if ((PINA & 0x04) == 0x04) {
                          SM1_STATE = LOCK;
                 }
-                else if((PINA & 0x07) == 0x02) {
-                         SM1_STATE = LOCK;
-                }	
 		else{
-		 	SM1_STATE = INIT;
+			SM1_STATE = INIT;
 		}
+               
                break;
 	}
 	
