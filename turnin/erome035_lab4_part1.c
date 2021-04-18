@@ -41,7 +41,7 @@ void Tick_LED() {
 			
 	case SM1_RELEASED2:
 	if( (PINA & 0x01) == 0x01){ // the button is pressed
-	SM1_STATE = SM1_RELEASED2;
+	SM1_STATE = SM1_LED1;
 	}
 	else{
 	SM1_STATE = SM1_LED1; 
@@ -49,7 +49,7 @@ void Tick_LED() {
 	break;		
 	
 	default:
-	SM1_STATE = SM1_SMStart;
+	SM1_STATE = SM1_RELEASED2;
 	break;
 }
 	
