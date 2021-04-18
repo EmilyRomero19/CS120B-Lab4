@@ -13,72 +13,64 @@
 #include "simAVRHeader.h"
 #endif
 
-enum SM1_STATES { SM1_SMStart, SM_INIT1, SM1_INIT2, SM1_ADD1, SM1_MINUS1, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
+enum SM1_STATES { SM1_SMStart, SM1_INIT, SM1_ADD, SM1_MINUS, SM1_RESET } SM1_STATE;
+
 void Tick_Reset() {	
-	unsigned char tempVal = PINA & 0x01; 
-	unsigned char tempVal2 = PINA & 0x02; 
+	
+	unsigned char ButtonAdd = PINA & 0x01; 
+	unsigned char ButtonMinus = PINA & 0x02; 
+	
+	
 	switch(SM1_STATE) {
 		case SM1_SMStart:
-		SM1_STATE = SM_INIT1;
+		SM1_STATE = SM1_INIT;
 		break;
-			
-		case SM_INIT1:
-		SM1_STATE = SM1_INIT2;
-		break;
-			
-		case SM1_INIT2:
-		if (tempVal && tempVal2) {
+				
+		case SM1_INIT:
+		if (ButtonAdd && ButtonMinus) { // reset
                	 	SM1_STATE = SM1_RESET;
             	}
-		else if (tempVal && !tempVal2) {
+		else if (ButtonAdd && !ButtonMinus) { // go add
 			SM1_STATE = SM1_ADD;
 		}
-		else if (!tempVal && tempVal2){
+		else if (!ButtonAdd && ButtonMinus){ // go subtract 
                 	SM1_STATE = SM1_MINUS;
             	}
-		else if (!tempVal && !tempVal2){
-			SM1_STATE = SM1_INIT2;
+		else if (!ButtonAdd && !ButtonMinus){ // stay in same state
+			SM1_STATE = SM1_INIT; 
 		}
 		break;
 			
 			
 		case SM1_RESET:
-		if (tempVal && tempVal2){
+		if (ButtonAdd && ButtonMinus){ // repeat reset
 			SM1_STATE = SM1_RESET;
 		}
 		else {
-			SM1_STATE = SM1_INIT2;
+			SM1_STATE = SM1_INIT; // go back to initial
 		}
 		break;
 			
 			
-		case SM1_ADD1:
-		if (tempVal && !tempVal2) {
-                	SM1_STATE = SM1_ADD1;
-            	}
-            	else {
-                	SM1_STATE = SM1_INIT2;
-            	}
-            	break;
-			
 		case SM1_ADD:
-			SM1_STATE = SM1_ADD1;
-		break;
-		
-			
-		case SM1_MINUS1:
-		if (!tempVal && !tempVal2) {
-			SM1_STATE = SM1_MINUS1;
+		if (ButtonAdd && !ButtonMinus) { 
+                	SM1_STATE = SM1_ADD; // stay here
             	}
             	else {
-                	SM1_STATE = SM1_INIT2;
+                	SM1_STATE = SM1_INIT; // go back to initial
             	}
             	break;
+			
 			
 		case SM1_MINUS:
-			SM1_STATE = SM1_MINUS;
-		break;
-			
+		if (!ButtonAdd && ButtonMinus) {
+			SM1_STATE = SM1_MINUS; //stay in minus
+            	}
+            	else {
+                	SM1_STATE = SM1_INIT;
+            	}
+            	break;
+				
 		default:
 			SM1_STATE = SM1_SMStart;
 		break;
@@ -86,21 +78,12 @@ void Tick_Reset() {
 	switch(SM1_STATE) {
 			
 	case SM1_SMStart:
-	PORTC = 0x07;
 	break;
 			
 	case SM_INIT1:
 	PORTC = 0x07;
 	break;
 			
-	case SM1_INIT2:
-	break;
-			
-	case SM1_ADD1:
-	break;
-			
-	case SM1_MINUS1:
-	break;
 			
 	case SM1_ADD:
 	if (PORTC < 0x09) {
