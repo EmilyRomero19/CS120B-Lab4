@@ -42,13 +42,13 @@ void Tick_Door() {
 			
 		case Y_UNLOCK:
 		if ((PINA & 0x07) == 0x02) {
-                      SM1_STATE = UnlockYRelease;
+                      SM1_STATE = Y_RELEASE;
                 }
 	 	else if (PINA == 0x00) {
-		      SM1_STATE = UnlockY;
+		      SM1_STATE = Y_UNLOCK;
 		}
                 else {
-                      SM1_STATE = Init;
+                      SM1_STATE = INIT;
                 }
                 break;
 			
