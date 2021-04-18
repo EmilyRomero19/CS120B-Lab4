@@ -17,9 +17,9 @@
 
 
 # Test sequence from waitA0: PA0, !PA0, PA0, !PA0, PA0 => PORTB: 0xF0
-tests = [ {'description': 'PINA: 0x01, 0x00, 0x02 => PORTB: 0x0F',
-    'steps': [{'inputs': [('PINA', 0x00)], 'iterations': 2},
-        {'inputs': [('PINA', 0x01)], 'iterations': 100},
+tests = [ {'description': 'PINA: 0x01, 0x00, 0x01, 0x00, 0x01 => PORTB: 0x0F',
+    'steps': [{'inputs': [('PINA', 0x01)], 'iterations': 2},
+        {'inputs': [('PINA', 0x00)], 'iterations': 2},
         {'inputs': [('PINA', 0x01)], 'iterations': 2},
         {'inputs': [('PINA', 0x00)], 'iterations': 2},
         {'inputs': [('PINA', 0x01)], 'iterations': 2}],
