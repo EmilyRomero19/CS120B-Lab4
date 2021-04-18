@@ -34,17 +34,32 @@ void Tick_LED() {
 	break;
 	
 	case SM1_ADD:
-	SM1_STATE = SM1_INIT;
+	if( (PINA & 0x01) == 0x01){
+		SM1_STATE = SM1_ADD;
+	}
+	else if{
+		SM1_STATE = SM1_INIT;
+	}
+	break;	
+	
+	case SM1_MINUS:
+	if ((PINA & 0x02) == 0x02){
+		SM1_STATE = SM1_MINUS;
+	}
+	else if{
+		SM1_STATE = SM1_INIT;
+	}
 	break;
 			
-	case SM1_MINUS:
-	SM1_STATE = SM1_INIT;
-	break;
-	
 	case SM1_RESET:
-	SM1_STATE = SM1_INIT;
-	break;
-	
+	if ((PINA & 0x02) == 0x02){
+		SM1_STATE = SM1_RESET;
+	}
+	else if{
+		SM1_STATE = SM1_INIT;
+	}
+	break;		
+			
 	default:
 	SM1_STATE = SM1_INIT;
 	break;		
