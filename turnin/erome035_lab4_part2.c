@@ -93,7 +93,7 @@ void Tick_Reset() {
 	PORTC = 0x07;
 	break;
 			
-	case SM_INIT1:
+	case SM1_INIT1:
 	PORTC = 0x07;
 	break;
 			
