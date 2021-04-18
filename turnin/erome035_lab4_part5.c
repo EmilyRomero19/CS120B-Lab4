@@ -12,7 +12,10 @@
 #include "simAVRHeader.h"
 #endif
 
-enum SM1_STATES {START, INIT, POUND_UNLOCK, Y_UNLOCK, Y_RELEASE, LOCK} SM1_STATE;
+enum SM1_STATES { START, INIT, VALID, INVALID, UNLOCK , LOCK } SM1_STATE;
+unsigned char index = 0x00;
+unsigned char array[4] = {0x04, 0x01, 0x02, 0x01};
+
 void Tick_Door() {
 	switch(SM1_STATE) {
 		case START:
@@ -20,62 +23,68 @@ void Tick_Door() {
 		break;
 			
 		case INIT:
-		if ((PINA & 0x07) == 0x04) {
-			SM1_STATE = POUND_UNLOCK;
+		if ((PINA & 0x87) == array[index]) {
+			SM1_STATE = VALID;
 		}
 		else if ((PINA & 0x87) == 0x80) {
-			SM1_STATE = Y_UNLOCK;
+			SM1_STATE = LOCK;
 		}
+		else if (PINA == 0x00) {
+			SM1_STATE = INIT;
+		}
+		else{
+			SM1_STATE = INVALID;
+		}
+		break; 
+			
+		
+		case VALID:
+		if ((index == 0x03) && ((PORTB & 0x01) == 0x01)) {
+			SM1_STATE = LOCK;
+		}
+		else if (index == 0x03) {
+			SM1_STATE = UNLOCK;
+		}
+		else if ((PINA & 0x07) == 0x00) {
+                         ++index;
+			SM1_STATE = INIT;
+                }
 		else {
+			SM1_STATE = VALID;
+		}
+                break;	
+			
+		
+		case INVALID:
+		if ((PINA & 0x07) == 0x00) {
+			index = 0x00;
 			SM1_STATE = INIT;
 		}
 		break;
 			
-		case POUND_UNLOCK:
-		if ((PINA & 0x07) == 0x04) {
-                        SM1_STATE = POUND_UNLOCK;
-                }
-                else {
-                        SM1_STATE = Y_UNLOCK;
-                }
-                break;
 			
-		case Y_UNLOCK:
-		if (((PINA & 0x07) == 0x02) && ((PORTB & 0x01) == 0x01)) {	
-			 SM1_STATE = LOCK;
+			
+		case UNLOCK:
+                if ((PINA & 0x07) == 0x00) {
+			SM1_STATE = INIT;
+			index = 0x00;
 		}
-		else if ((PINA & 0x07) == 0x02) {
-                      SM1_STATE = Y_RELEASE;
-                }
-	 	else if (PINA == 0x00) {
-		      SM1_STATE = Y_UNLOCK;
+		else {
+			SM1_STATE = UNLOCK;
 		}
-                else {
-                      SM1_STATE = INIT;
-                }
-                break;
+		break;	
 			
-		case Y_RELEASE:
-		if ((PINA & 0x07) == 0x02) {
-                        SM1_STATE = Y_RELEASE;
-                }
-                else {
-                        SM1_STATE = INIT;
-                }
-                break;
-			
-			
-		case LOCK:
+		
+		case Locked:
 		if ((PINA & 0x87) == 0x80) {
-                         SM1_STATE = LOCK;
+                        SM1_STATE = LOCK;
                 }
-                else if((PINA & 0x07) == 0x02) {
-                         SM1_STATE = LOCK;
+                else {
+                          SM1_STATE = INIT;
+			  index = 0x00;
                 }
-		else{
-		 	SM1_STATE = INIT;
-		}
-               break;
+                break;		
+			
 	}
 	
 	switch(SM1_STATE) {
@@ -86,13 +95,13 @@ void Tick_Door() {
 	case INIT:
 	break;
 			
-	case POUND_UNLOCK:
+	case VALID:
 	break;
 			
-	case Y_UNLOCK:
+	case INVALID:
 	break;
 			
-	case Y_RELEASE:
+	case UNLOCK:
 	PORTB = 0x01;
 	break;
 			
