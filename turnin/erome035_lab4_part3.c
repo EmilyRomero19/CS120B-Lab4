@@ -27,7 +27,7 @@ void Tick_Door() {
 			SM1_STATE = Y_UNLOCK;
 		}
 		else {
-			SM1_STATE = INIT;
+			SM1_STATE = POUND_UNLOCK;
 		}
 		break;
 			
